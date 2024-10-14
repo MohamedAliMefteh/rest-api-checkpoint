@@ -1,0 +1,47 @@
+const User =require('../models/userSchema')
+//Get User
+const findUser= async(req,res)=>{
+    try{
+        const users=await User.find()
+        res.status(200).json({msg:"found all users",user:users})
+    }
+    catch{
+        res.status(500).json({msg:error.msg})
+    }
+}
+    
+
+//create User
+const creatUser=async(req,res)=>{
+    try{
+        const newUser=await User.create(req.body)
+        await newUser.save()
+        res.status(201).json({msg:"user created",user:newUser})
+    }
+    catch{
+        res.status(500).json({msg:error.msg})
+    }
+}
+
+const updateUser=async(req,res)=>{
+    try{
+        const newUser=await User.findByIdAndUpdate({_id:req.params.id},{...req.body})
+        if(!newUser)return res.status(404).json({msg:"user not found"})
+        res.status(200).json({msg:"user updated",user:newUser})
+    }
+    catch{
+        res.status(500).json({msg:error.msg})
+    }
+}
+const deleteUser=async(req,res)=>{
+    try{
+        const newUser=await User.findByIdAndDelete(req.params.id)
+        if(!newUser)return res.status(404).json({msg:"user not found"})
+        res.status(200).json({msg:"user deleted",user:newUser})
+    }
+    catch{
+        res.status(500).json({msg:error.msg})
+    }
+}
+
+module.exports={creatUser,findUser,updateUser,deleteUser}
